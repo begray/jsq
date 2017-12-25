@@ -29,12 +29,12 @@ $ time stack exec jsq-exe -- '.[].status.status-details' sample.json | head -n3
 "done at 2017-12-09T00:38:13.860+03:00"
 "done at 2017-12-09T00:38:32.736+03:00"
 "done at 2017-12-09T00:37:51.380+03:00"
-stack exec jsq-exe -- '.[].status.status-details' sample.json  1.29s user 0.28s system 117% cpu 1.333 total
+stack exec jsq -- '.[].status.status-details' sample.json  1.29s user 0.28s system 117% cpu 1.333 total
 head -n3  0.00s user 0.00s system 0% cpu 0.779 total
 $ time stack exec jsq-exe -- '.[].status.status-details' sample.json | tail -n3
 "done at 2017-12-09T00:37:59.498+03:00"
 "done at 2017-12-09T00:38:27.542+03:00"
 "done at 2017-12-09T00:38:11.074+03:00"
-stack exec jsq-exe -- '.[].status.status-details' sample.json  7.04s user 1.29s system 122% cpu 6.814 total
+stack exec jsq -- '.[].status.status-details' sample.json  7.04s user 1.29s system 122% cpu 6.814 total
 tail -n3  0.01s user 0.00s system 0% cpu 6.813 total
 ```
