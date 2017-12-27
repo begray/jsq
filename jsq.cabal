@@ -26,6 +26,7 @@ library
                      , bytestring
                      , yaml
                      , text
+                     , vector
   default-language:    Haskell2010
   default-extensions:  OverloadedStrings, NoImplicitPrelude
 
@@ -52,6 +53,11 @@ test-suite jsq-test
   build-depends:       base
                      , jsq
                      , protolude >= 0.1.6 && < 0.2
+                     , tasty
+                     , tasty-hunit
+                     , aeson
+                     , vector
+                     , raw-strings-qq
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
   default-extensions:  OverloadedStrings, NoImplicitPrelude
