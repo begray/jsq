@@ -5,20 +5,21 @@ module Main where
 
 import           Protolude
 
-import qualified Data.ByteString.Lazy   as BSL
+import qualified Data.ByteString.Lazy as BSL
 
-import qualified Options.Applicative as Options
+import qualified Options.Applicative  as Options
 
-import Jsq.Options (config, Config(..))
-import Jsq.Query (executeQuery)
+import           Jsq.Options          (Config (..), config)
+import           Jsq.Query            (executeQuery)
 
 main :: IO ()
 main = runQuery =<< Options.execParser opts
   where
     opts = Options.info (config <**> Options.helper)
-           (Options.fullDesc
-            <> Options.progDesc "Run QUERY against JSON stream"
-            <> Options.header "jsq - JSON stream processor"
+           (
+             Options.fullDesc
+               <> Options.progDesc "Run QUERY against JSON stream"
+               <> Options.header "jsq - JSON stream processor"
            )
 
 runQuery :: Config -> IO ()

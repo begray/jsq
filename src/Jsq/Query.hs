@@ -5,6 +5,7 @@ Description: JSON stream querying
 
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Jsq.Query(
   executeQuery,
@@ -12,9 +13,12 @@ module Jsq.Query(
 )
 where
 
+import           Data.Either            (fromRight)
 import           Data.JsonStream.Parser
+import           Data.Text.Read         (decimal)
 import           Jsq.Options
 import           Protolude
+import           Text.RE.TDFA           (re, (=~))
 
 import qualified Data.Aeson             as Aeson
 import qualified Data.ByteString.Lazy   as BSL
@@ -38,11 +42,15 @@ queryStream query stream =
   where
     tokens = T.splitOn "." query
 
+    textToInt :: Text -> Int
+    textToInt t = fst $ fromRight (0, "") (decimal t)
+
     combo :: Text -> Parser a -> Parser a
-    combo t p = case t of
-      ""   -> p
-      "[]" -> arrayOf p
-      str  -> objectWithKey str p
+    combo t p
+      | t == "" = p
+      | t == "[]" = arrayOf p
+      | [_,i]:_ <- (t =~ [re|\[([0-9]+)\]|]) = arrayWithIndexOf (textToInt i) p
+      | otherwise  = objectWithKey t p
 
     parser :: Parser Aeson.Value
     parser = foldr combo value tokens

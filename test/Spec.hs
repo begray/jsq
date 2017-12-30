@@ -28,6 +28,9 @@ unitTests = testGroup "Unit tests"
     , testCase "query - enumerate elements of a list" $
       queryStream ".[]" "[1, 2, 3]" @?= map Number [1, 2, 3]
 
+    , testCase "query - access element of a list by index" $
+      queryStream ".[1]" "[1, 2, 3]" @?= map Number [2]
+
     , testCase "query - simple selection within elements of a list" $
       queryStream
         ".[].one"
