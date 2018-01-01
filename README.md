@@ -34,7 +34,7 @@ $ stack install
 $ ls -sk sample.json
  879108 sample.json
 
-# using jq and head/tail to extract first last status-details
+# using jq and head/tail to extract first/last status-details
 
 $ time jq '.[].status."status-details"' sample.json | head -n1
 "done at 2017-12-09T00:38:13.860+03:00"
