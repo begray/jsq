@@ -4,7 +4,7 @@
 
 Think about `jsq` as `jq`, but with focus on processing large JSON files and streams.
 
-At the moment it supports very limitted set of filtering operations and cannot really be compared to `jq`, but it's still quite usable if you want to extract certain parts of structure from large JSON files or streams.
+At the moment it supports very limitted set of filtering operations and cannot really be compared to `jq`, but still quite usable if you want to extract certain parts of structure from large JSON files or streams.
 
 # Installation
 
