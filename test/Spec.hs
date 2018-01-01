@@ -10,6 +10,7 @@ import           Jsq.Query
 
 import           Data.Aeson        (Value (..))
 import qualified Data.Vector       as Vector
+import qualified Data.HashMap.Lazy as HashMap
 
 import           Text.RawString.QQ (r)
 
@@ -36,4 +37,22 @@ unitTests = testGroup "Unit tests"
         ".[].one"
         [r| [{"one": 1, "two": 11}, {"one": 2, "two": 22}] |]
       @?= map Number [1, 2]
+
+    , testCase "folding - simple output folding" $
+      map (foldValue 1) (queryStream ".[]"
+        [r|[
+          {
+            "subobject": {"one": "two"},
+            "subarray": ["one", "two"],
+            "value": "one",
+            "nullvalue": null
+          }
+        ]|])
+      @?= [Object $ HashMap.fromList [
+                ("subobject", String "{...}"),
+                ("subarray", String "[...]"),
+                ("value", String "one"),
+                ("nullvalue", Null)
+              ]
+          ]
   ]

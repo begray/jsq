@@ -9,7 +9,8 @@ Description: JSON stream querying
 
 module Jsq.Query(
   executeQuery,
-  queryStream
+  queryStream,
+  foldValue
 )
 where
 
@@ -27,13 +28,25 @@ import qualified Data.Yaml              as Yaml
 
 -- | execute query from config on lazy input and print output to console
 executeQuery :: Config -> BSL.ByteString -> IO ()
-executeQuery Config{query, yamlOutput} input = do
+executeQuery Config{query, depth, yamlOutput} input = do
   let encodeValue :: Aeson.Value -> BSL.ByteString
       encodeValue = case yamlOutput of
         True  -> BSL.fromStrict . Yaml.encode
         False -> Aeson.encode
 
-  mapM_ (putStrLn . encodeValue) $ queryStream query input
+      foldValue_ = case depth of
+        Just d -> foldValue d
+        Nothing -> identity
+
+  mapM_ (putStrLn . encodeValue . foldValue_) $ queryStream query input
+
+-- | fold value at a specified level of structure
+foldValue :: Int -> Aeson.Value -> Aeson.Value
+foldValue 0 (Aeson.Array _) = Aeson.String "[...]"
+foldValue 0 (Aeson.Object _) = Aeson.String "{...}"
+foldValue d (Aeson.Array v) = Aeson.Array $ fmap (foldValue (d-1)) v
+foldValue d (Aeson.Object h) = Aeson.Object $ fmap (foldValue (d-1)) h
+foldValue _ v = v
 
 -- | execute a query on a stream and return a list of results
 queryStream :: Text -> BSL.ByteString -> [Aeson.Value]

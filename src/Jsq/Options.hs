@@ -9,10 +9,11 @@ module Jsq.Options(
 ) where
 
 import           Options.Applicative
-import           Protolude
+import           Protolude hiding (option)
 
 data Config = Config {
   yamlOutput     :: Bool,
+  depth          :: Maybe Int,
   query          :: Text,
   inputFilePaths :: [FilePath]
 }
@@ -23,6 +24,14 @@ config =
   <$> switch (
         short 'y'
         <> long "yaml"
+        <> help "ouput results using YAML"
+      )
+  <*> optional (
+        option auto (
+          short 'd'
+          <> long "depth"
+          <> help "fold structure at specified level of depth"
+        )
       )
   <*> argument str (
         metavar "QUERY"
