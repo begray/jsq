@@ -23,7 +23,9 @@ import           Text.RE.TDFA           (re, (=~))
 
 import qualified Data.Aeson             as Aeson
 import qualified Data.ByteString.Lazy   as BSL
+import qualified Data.HashMap.Lazy      as HashMap
 import qualified Data.Text              as T
+import qualified Data.Vector            as Vector
 import qualified Data.Yaml              as Yaml
 
 -- | execute query from config on lazy input and print output to console
@@ -35,15 +37,19 @@ executeQuery Config{query, depth, yamlOutput} input = do
         False -> Aeson.encode
 
       foldValue_ = case depth of
-        Just d -> foldValue d
+        Just d  -> foldValue d
         Nothing -> identity
 
   mapM_ (putStrLn . encodeValue . foldValue_) $ queryStream query input
 
 -- | fold value at a specified level of structure
 foldValue :: Int -> Aeson.Value -> Aeson.Value
-foldValue 0 (Aeson.Array _) = Aeson.String "[...]"
-foldValue 0 (Aeson.Object _) = Aeson.String "{...}"
+foldValue 0 arr@(Aeson.Array vec)
+  | Vector.null vec = arr
+  | otherwise = Aeson.String "[...]"
+foldValue 0 obj@(Aeson.Object props) 
+  | HashMap.null props = obj
+  | otherwise = Aeson.String "{...}"
 foldValue d (Aeson.Array v) = Aeson.Array $ fmap (foldValue (d-1)) v
 foldValue d (Aeson.Object h) = Aeson.Object $ fmap (foldValue (d-1)) h
 foldValue _ v = v

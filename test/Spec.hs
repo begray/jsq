@@ -45,14 +45,16 @@ unitTests = testGroup "Unit tests"
             "subobject": {"one": "two"},
             "subarray": ["one", "two"],
             "value": "one",
-            "nullvalue": null
+            "nullvalue": null,
+            "empty-subarray": []
           }
         ]|])
       @?= [Object $ HashMap.fromList [
                 ("subobject", String "{...}"),
                 ("subarray", String "[...]"),
                 ("value", String "one"),
-                ("nullvalue", Null)
+                ("nullvalue", Null),
+                ("empty-subarray", Array Vector.empty)
               ]
           ]
   ]
