@@ -16,15 +16,53 @@ $ stack test
 $ stack install
 ```
 
-# Query examples
+# Features
 
 ## Filtering
 
+`jq`-like selection
+
+```
+$ curl -s http://www.json-generator.com/api/json/get/cgjIJCdlua\?indent\=2 | jsq '.[].friends.[0]'
+{"name":"Tia Pearson","id":0}
+{"name":"Horton Mccoy","id":0}
+{"name":"Jimmie Santiago","id":0}
+{"name":"Montoya Powell","id":0}
+{"name":"Bray Delacruz","id":0}
+```
+
 ## Folding 
+
+Fold document at a certain level for a brief overview of its contents
+
+```
+$ curl -s http://www.json-generator.com/api/json/get/cgjIJCdlua\?indent\=2 | jsq -d1 '.'
+["{...}","{...}","{...}","{...}","{...}"]
+```
 
 ## YAML output
 
-# Motivating example
+Prefer reading YAML, not JSON? Not a problem!
+
+```
+curl -s http://www.json-generator.com/api/json/get/cgjIJCdlua\?indent\=2 | jsq -y '.[].friends.[0]'
+name: Tia Pearson
+id: 0
+
+name: Horton Mccoy
+id: 0
+
+name: Jimmie Santiago
+id: 0
+
+name: Montoya Powell
+id: 0
+
+name: Bray Delacruz
+id: 0
+```
+
+# Why another `jq`? Motivating example.
 
 `jq` can be rather inefficient when dealing with large bodies of JSON
 
